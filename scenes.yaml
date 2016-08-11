@@ -1,0 +1,34 @@
+- name: Romantic
+  entities:
+    group.james_ceiling_fan_lights: off
+    light.james_ceiling_fan:
+      state: on
+      xy_color: [0.33, 0.66]
+      brightness: 200
+
+- name: Movies
+  entities:
+    group.james_ceiling_fan_lights: off
+
+- name: Bedtime
+  entities:
+    group.james_ceiling_fan_lights: off
+    group.james_bed_lights: off
+    light.james_closet:
+      state: off
+
+- name: Morning_Lights
+  entities:
+    group.james_ceiling_fan_lights:
+      state: on
+      brightness: 254
+      transition: 300
+
+- name: Wakeup
+  entities:
+    light.james_ceiling_fan:
+      state: on
+      brightness: 171
+      rgb_color: [170, 170, 170]
+      color_temp: 178
+      transition: 60

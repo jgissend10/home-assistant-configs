@@ -1,0 +1,12 @@
+alias: bedtime
+trigger:
+  platform: state
+  entity_id: input_boolean.bedtime
+  to: 'on'
+action:
+  - service: scene.turn_on
+    data:
+      entity_id: scene.bedtime
+  - service: notify.autoremote
+    data:
+      message: bedtime

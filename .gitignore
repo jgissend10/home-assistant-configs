@@ -1,0 +1,7 @@
+secrets.yaml
+deps/
+*.conf
+home-assistant.db
+home-assistant.log
+home-assistant_v2.db
+known_devices.yaml

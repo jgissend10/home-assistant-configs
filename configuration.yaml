@@ -1,0 +1,335 @@
+####################################################
+#                                                  #
+#                  Basic Settings                  #
+#                                                  #
+####################################################
+
+###  Global configuration ###
+#  Note that `customize` is nested within `homeassistant`.
+
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: 158
+  # C for Celsius, F for Fahrenheit
+  temperature_unit: F
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  
+http:
+  api_password: !secret api_password
+
+####################################################
+#                                                  #
+#                  Components                      #
+#                                                  #
+####################################################
+
+# Discover some devices automatically
+discovery:
+
+# Enables the frontend
+frontend:
+
+# Track the sun
+sun:
+
+# Checks for available updates
+updater:
+
+# View all events in a logbook
+logbook:
+
+# Enables support for tracking state changes over time.
+history:
+
+# Allows you to issue voice commands from the frontend
+conversation:
+
+# Prediction of weather
+#sensor:
+#   platform: yr
+
+light:
+  platform: lifx
+  server: !secret lifx_ip
+  
+wink:
+  access_token: !secret wink_access_token
+
+ifttt:
+  key: !secret ifttt_key
+
+group:
+  home:
+    view: yes
+    entities:
+      - binary_sensor.front_door
+      - binary_sensor.back_door
+      - binary_sensor.basement_door
+      - sun.sun
+      - sensor.plex_spy
+      - sensor.speedtest_download
+      - sensor.speedtest_ping
+      - sensor.speedtest_upload
+      - device_tracker.james_nexus6p
+      - weblink.home_assistant
+      - weblink.plex
+      - weblink.couchpotato
+      - weblink.sonarr
+      - weblink.nzbget
+      - weblink.dognzb
+      - weblink.router
+  living_room_fan_lights:
+    name: Living Room Fan Lights
+    entities:
+      - light.living_room_fan_1
+      - light.living_room_fan_2
+      - light.living_room_fan_3
+      - light.living_room_fan_4
+  living_room:
+    name: Living Room
+    view: yes
+    entities:
+      - binary_sensor.living_room
+      - group.living_room_fan_lights
+      - switch.living_room_entertainment_center
+      - media_player.living_room
+      - media_player.roku_1gh31x043774
+  kitchen:
+    name: Kitchen
+    view: yes
+    entities:
+      - binary_sensor.kitchen
+      - switch.kitchen_cabinets
+  james_ceiling_fan_lights:
+    name: James Ceiling Fan Lights
+    entities:
+      - light.james_ceiling_fan
+      - light.ceiling_fan_front_daylight
+      - light.ceiling_fan_left_soft
+      - light.ceiling_fan_right_soft
+  james_bed_lights:
+    name: James Bed Lights
+    entities:
+      - light.far_wall_bed
+      - light.headboard
+  james:
+    name: James' Room
+    view: yes
+    entities:
+      - device_tracker.james_nexus6p
+      - group.james_ceiling_fan_lights
+      - group.james_bed_lights
+      - light.james_closet
+      - scene.romantic
+      - scene.movies
+      - scene.wakeup
+      - scene.bedtime
+      - switch.fluxer
+      - input_boolean.bedtime
+  james_fitness:
+    name: James' Fitness
+    entities:
+      - sensor.activitycalories
+      - sensor.bmi
+      - sensor.body_fat
+      - sensor.body_weight
+      - sensor.calories
+      - sensor.caloriesbmr
+      - sensor.distance
+      - sensor.elevation
+      - sensor.floors
+      - sensor.heart
+      - sensor.minutesfairlyactive
+      - sensor.minuteslightlyactive
+      - sensor.minutessedentary
+      - sensor.minutesveryactive
+      - sensor.sleep_awakeningscount
+      - sensor.sleep_efficiency
+      - sensor.sleep_minutesafterwakeup
+      - sensor.sleep_minutesasleep
+      - sensor.sleep_minutesawake
+      - sensor.sleep_minutestofallasleep
+      - sensor.sleep_starttime
+      - sensor.sleep_timeinbed
+      - sensor.steps
+      - sensor.tracker_activitycalories
+      - sensor.tracker_calories
+      - sensor.tracker_steps
+  clay:
+    name: Clay's Room
+    view: yes
+    entities:
+      - group.clay_fan_lights
+  clay_fan_lights:
+    name: Clay's Fan Lights
+    entities:
+      - light.clay_fan_1
+      - light.clay_fan_2
+      - light.clay_fan_3
+      - light.clay_fan_4
+  office:
+    name: Office
+    view: yes
+    entities:
+      - light.office_desk
+  weather:
+    name: Weather
+    view: yes
+    entities:
+      - sensor.weather_apparent_temperature
+      - sensor.weather_cloud_coverage
+      - sensor.weather_daily_summary
+      - sensor.weather_dew_point
+      - sensor.weather_hourly_summary
+      - sensor.weather_humidity
+      - sensor.weather_icon
+      - sensor.weather_minutely_summary
+      - sensor.weather_nearest_storm_bearing
+      - sensor.weather_nearest_storm_distance
+      - sensor.weather_ozone
+      - sensor.weather_precip
+      - sensor.weather_precip_intensity
+      - sensor.weather_precip_probability
+      - sensor.weather_pressure
+      - sensor.weather_summary
+      - sensor.weather_temperature
+      - sensor.weather_visibility
+      - sensor.weather_wind_bearing
+      - sensor.weather_wind_speed
+      - sun.sun
+  health:
+    name: Health
+    view: yes
+    entities:
+      - group.james_fitness
+  media:
+    name: Media
+    view: yes
+    entities:
+      - media_player.1st_gen
+      - media_player.2nd_gen
+      - media_player.nexus_player
+      - media_player.roku_1gh31x043774
+
+sensor:
+  # - platform: rest
+    # resource: http://home.gissendaner.com:8003/userlocs?group=vivianlane&user=james
+    # value_template: '{{ value_json.users.james.location }}{{ value_json.users.james.time }}'
+    # method: GET
+    # name: FIND location sensor
+    # scan_interval: 3
+  - platform: plex
+    name: Plex Spy
+    host: 192.168.1.50
+    port: 32400
+    username: !secret plex_username
+    password: !secret plex_password
+    server: leviathan
+  - platform: speedtest
+    minute:
+      - 0
+      - 30
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+  - platform: forecast
+    api_key: !secret forcast_api_key
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+  - platform: fitbit
+    monitored_resources:
+      - "activities/activityCalories"
+      - "activities/calories"
+      - "activities/caloriesBMR"
+      - "activities/distance"
+      - "activities/elevation"
+      - "activities/floors"
+      - "activities/heart"
+      - "activities/minutesFairlyActive"
+      - "activities/minutesLightlyActive"
+      - "activities/minutesSedentary"
+      - "activities/minutesVeryActive"
+      - "activities/steps"
+      - "activities/tracker/activityCalories"
+      - "activities/tracker/calories"
+      - "activities/tracker/distance"
+      - "activities/tracker/elevation"
+      - "activities/tracker/floors"
+      - "activities/tracker/minutesFairlyActive"
+      - "activities/tracker/minutesLightlyActive"
+      - "activities/tracker/minutesSedentary"
+      - "activities/tracker/minutesVeryActive"
+      - "activities/tracker/steps"
+      - "body/bmi"
+      - "body/fat"
+      - "body/weight"
+      - "sleep/awakeningsCount"
+      - "sleep/efficiency"
+      - "sleep/minutesAfterWakeup"
+      - "sleep/minutesAsleep"
+      - "sleep/minutesAwake"
+      - "sleep/minutesToFallAsleep"
+      - "sleep/startTime"
+      - "sleep/timeInBed"
+      
+mqtt:
+  broker: 192.168.1.50
+  port: 8883
+  client_id: home-assistant-1
+  keepalive: 60
+  username: haas
+  
+device_tracker:
+  - platform: owntracks
+    max_gps_accuracy: 200
+  # - platform: nmap_tracker
+    # hosts: 192.168.1.1/24
+
+notify:
+  - name: slack
+    platform: slack
+    api_key: !secret slack_api_key
+    default_channel: '#general'
+  - name: autoremote
+    platform: rest
+    resource: !secret autoremote_link
+
+input_boolean:
+  bedtime:
+    name: Time for Bed
+    initial: off
+    icon: mdi:hotel
+
+###  Scenes  ###
+scene: !include scenes.yaml
+
+###  Weblinks  ###
+weblink: !include weblink.yaml
+
+###  Automation  ###
+automation: !include_dir_list automation

@@ -1,0 +1,9 @@
+alias: wakeup
+trigger:
+  platform: state
+  entity_id: input_boolean.bedtime
+  to: 'off'
+action:
+  - service: scene.turn_on
+    data:
+      entity_id: scene.morning_lights
