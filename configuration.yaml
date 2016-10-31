@@ -14,10 +14,10 @@ homeassistant:
   latitude: !secret home_latitude
   longitude: !secret home_longitude
   elevation: 158
-  # C for Celsius, F for Fahrenheit
-  temperature_unit: F
+  # 'metric' for the metric system, 'imperial' for the imperial system
+  unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: America/New_York
+  time_zone: !secret tz
   
 http:
   api_password: !secret api_password
@@ -67,6 +67,8 @@ group:
   home:
     view: yes
     entities:
+      - updater.updater
+      - light.porch_light
       - binary_sensor.front_door
       - binary_sensor.back_door
       - binary_sensor.basement_door
@@ -76,20 +78,14 @@ group:
       - sensor.speedtest_ping
       - sensor.speedtest_upload
       - device_tracker.james_nexus6p
-      - weblink.home_assistant
-      - weblink.plex
-      - weblink.couchpotato
-      - weblink.sonarr
-      - weblink.nzbget
-      - weblink.dognzb
-      - weblink.router
+      - device_tracker.androidabd572ceca26d5b0cincirrcom
   living_room_fan_lights:
     name: Living Room Fan Lights
     entities:
-      - light.living_room_fan_1
-      - light.living_room_fan_2
-      - light.living_room_fan_3
-      - light.living_room_fan_4
+      - light.living_room_fan_front
+      - light.living_room_fan_left
+      - light.living_room_fan_rear
+      - light.living_room_fan_right
   living_room:
     name: Living Room
     view: yes
@@ -97,7 +93,8 @@ group:
       - binary_sensor.living_room
       - group.living_room_fan_lights
       - switch.living_room_entertainment_center
-      - media_player.living_room
+      - media_player.1st_gen
+      - media_player.nexus_player
       - media_player.roku_1gh31x043774
   kitchen:
     name: Kitchen
@@ -109,28 +106,44 @@ group:
     name: James Ceiling Fan Lights
     entities:
       - light.james_ceiling_fan
-      - light.ceiling_fan_front_daylight
-      - light.ceiling_fan_left_soft
-      - light.ceiling_fan_right_soft
+      - light.james_fan_front_daylight
+      - light.james_fan_left_soft
+      - light.james_fan_right_soft
   james_bed_lights:
     name: James Bed Lights
     entities:
-      - light.far_wall_bed
-      - light.headboard
+      - light.james_bed_left
+      - light.james_bed_right
+  james_lightstrips:
+    name: James Light Strips
+    entities:
+      - light.james_bed_left
+      - light.james_bed_right
+      - light.james_dresser
+  james_presence:
+    name: James' Presence
+    entities:
+      - device_tracker.james_nexus6p
+      - device_tracker.jamesmbp
+      - device_tracker.james_work_phone
+      - device_tracker.james_work_mbp
   james:
     name: James' Room
     view: yes
     entities:
-      - device_tracker.james_nexus6p
+      - group.james_presence
       - group.james_ceiling_fan_lights
       - group.james_bed_lights
+      - group.james_lightstrips
       - light.james_closet
       - scene.romantic
       - scene.movies
       - scene.wakeup
       - scene.bedtime
-      - switch.fluxer
+      - scene.morning_lights
       - input_boolean.bedtime
+      - device_tracker.james_nexus6p
+      - device_tracker.jamesmbp
   james_fitness:
     name: James' Fitness
     entities:
@@ -161,10 +174,14 @@ group:
       - sensor.tracker_calories
       - sensor.tracker_steps
   clay:
-    name: Clay's Room
+    name: Clay
     view: yes
     entities:
       - group.clay_fan_lights
+      - group.clay_presence
+      - device_tracker.androidabd572ceca26d5b0cincirrcom
+      - device_tracker.bfmc02mq6bgfh00
+      - device_tracker.rorycincirrcom
   clay_fan_lights:
     name: Clay's Fan Lights
     entities:
@@ -172,35 +189,44 @@ group:
       - light.clay_fan_2
       - light.clay_fan_3
       - light.clay_fan_4
+  clay_presence:
+    name: Clay's Presence
+    entities:
+      - device_tracker.androidabd572ceca26d5b0cincirrcom
+      - device_tracker.bfmc02mq6bgfh00
+  sam:
+    name: Sam's Room
+    entities:
+      - device_tracker.samsmbpcincirrcom
   office:
     name: Office
     view: yes
     entities:
-      - light.office_desk
+      - light.james_office_desk
   weather:
     name: Weather
     view: yes
     entities:
-      - sensor.weather_apparent_temperature
-      - sensor.weather_cloud_coverage
-      - sensor.weather_daily_summary
-      - sensor.weather_dew_point
-      - sensor.weather_hourly_summary
-      - sensor.weather_humidity
-      - sensor.weather_icon
-      - sensor.weather_minutely_summary
-      - sensor.weather_nearest_storm_bearing
-      - sensor.weather_nearest_storm_distance
-      - sensor.weather_ozone
-      - sensor.weather_precip
-      - sensor.weather_precip_intensity
-      - sensor.weather_precip_probability
-      - sensor.weather_pressure
-      - sensor.weather_summary
-      - sensor.weather_temperature
-      - sensor.weather_visibility
-      - sensor.weather_wind_bearing
-      - sensor.weather_wind_speed
+      - sensor.forecastio_apparent_temperature
+      - sensor.forecastio_cloud_coverage
+      - sensor.forecastio_daily_summary
+      - sensor.forecastio_dew_point
+      - sensor.forecastio_hourly_summary
+      - sensor.forecastio_humidity
+      - sensor.forecastio_icon
+      - sensor.forecastio_minutely_summary
+      - sensor.forecastio_nearest_storm_bearing
+      - sensor.forecastio_nearest_storm_distance
+      - sensor.forecastio_ozone
+      - sensor.forecastio_precip
+      - sensor.forecastio_precip_intensity
+      - sensor.forecastio_precip_probability
+      - sensor.forecastio_pressure
+      - sensor.forecastio_summary
+      - sensor.forecastio_temperature
+      - sensor.forecastio_visibility
+      - sensor.forecastio_wind_bearing
+      - sensor.forecastio_wind_speed
       - sun.sun
   health:
     name: Health
@@ -215,8 +241,35 @@ group:
       - media_player.2nd_gen
       - media_player.nexus_player
       - media_player.roku_1gh31x043774
+  links:
+    name: Links
+    view: yes
+    entities:
+      - weblink.home_assistant
+      - weblink.plex
+      - weblink.couchpotato
+      - weblink.sonarr
+      - weblink.nzbget
+      - weblink.dognzb
+      - weblink.router
 
 sensor:
+  - platform: nzbget
+    host: home.gissendaner.com
+    port: 6789
+    username: !secret nzbget_username
+    password: !secret nzbget_password
+    monitored_variables:
+      - article_cache
+      - average_download_rate
+      - download_paused
+      - download_rate
+      - download_size
+      - free_disk_space
+      - post_paused
+      - remaining_size
+      - uptime
+
   # - platform: rest
     # resource: http://home.gissendaner.com:8003/userlocs?group=vivianlane&user=james
     # value_template: '{{ value_json.users.james.location }}{{ value_json.users.james.time }}'
@@ -225,7 +278,7 @@ sensor:
     # scan_interval: 3
   - platform: plex
     name: Plex Spy
-    host: 192.168.1.50
+    host: 192.168.86.50
     port: 32400
     username: !secret plex_username
     password: !secret plex_password
@@ -261,6 +314,11 @@ sensor:
       - minutely_summary
       - hourly_summary
       - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
   - platform: fitbit
     monitored_resources:
       - "activities/activityCalories"
@@ -298,17 +356,34 @@ sensor:
       - "sleep/timeInBed"
       
 mqtt:
-  broker: 192.168.1.50
+  broker: 192.168.86.50
   port: 8883
   client_id: home-assistant-1
   keepalive: 60
   username: haas
   
 device_tracker:
+  #- platform: ddwrt
+  #  host: 192.168.1.1
+  #  username: !secret router_username
+  #  password: !secret router_password
+    # If new discovered devices are tracked by default (default: yes)
+  #  track_new_devices: no
+    # Seconds between each scan for new devices (default: 12)
+  #  interval_seconds: 12
+    # Seconds to wait till marking someone as not home after not being seen
+    # (default: 180)
+  #  consider_home: 180
   - platform: owntracks
+    waypoints: True
     max_gps_accuracy: 200
   # - platform: nmap_tracker
     # hosts: 192.168.1.1/24
+  - platform: automatic
+    client_id: !secret automatic_client_id
+    secret: !secret automatic_secret
+    username: !secret automatic_username
+    password: !secret automatic_password
 
 notify:
   - name: slack
@@ -332,4 +407,34 @@ scene: !include scenes.yaml
 weblink: !include weblink.yaml
 
 ###  Automation  ###
-automation: !include_dir_list automation
+automation: !include_dir_merge_list automation
+switch:
+  platform: flux
+  lights:
+    - light.james_office_desk
+  name: Fluxer
+  start_time: '7:00'
+  stop_time: '23:00'
+  start_colortemp: 4000
+  sunset_colortemp: 3000
+  stop_colortemp: 1900
+  brightness: 200
+  mode: xy
+
+panel_iframe:
+  couchpotato:
+    title: 'CouchPotato'
+    icon: 'mdi:movie'
+    url: 'http://home.gissendaner.com:5050'
+  nzbget:
+    title: 'NZBGet'
+    icon: 'mdi:cloud-download'
+    url: 'http://home.gissendaner.com:6789'
+  sonarr:
+    title: 'Sonarr'
+    icon: 'mdi:television'
+    url: 'http://home.gissendaner.com:8989'
+  plex:
+    title: 'Plex'
+    icon: 'mdi:youtube-play'
+    url: 'http://home.gissendaner.com:32400/web'

@@ -13,8 +13,8 @@
 - name: Bedtime
   entities:
     group.james_ceiling_fan_lights: off
-    group.james_bed_lights: off
-    light.james_closet:
+    group.james_lightstrips: off
+    light.closet:
       state: off
 
 - name: Morning_Lights
@@ -31,4 +31,4 @@
       brightness: 171
       rgb_color: [170, 170, 170]
       color_temp: 178
-      transition: 60
+      transition: 180
